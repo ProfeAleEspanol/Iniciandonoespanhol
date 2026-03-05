@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+:root {
+  --color-surface: #fff8ef;
+  --color-ink: #14232f;
+  --color-brand: #ff6b35;
+  --color-border: #ffd6bf;
+  --color-muted: #4a5d6b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

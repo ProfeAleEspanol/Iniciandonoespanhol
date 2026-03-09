@@ -79,6 +79,19 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 <p className="mt-2 text-sm text-[var(--color-muted)]">{lesson.practice}</p>
               </div>
             </div>
+
+            {lesson.steps?.length ? (
+              <div className="mt-6 rounded-2xl border border-[var(--color-border)] p-4">
+                <h2 className="text-lg font-black">Como fazer esta aula</h2>
+                <ol className="mt-3 space-y-2 text-sm text-[var(--color-muted)]">
+                  {lesson.steps.map((step, index) => (
+                    <li key={step}>
+                      <strong className="text-[var(--color-ink)]">{index + 1}.</strong> {step}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            ) : null}
           </article>
 
           <aside className="rounded-3xl bg-[var(--color-ink)] p-5 text-white shadow-sm">
@@ -86,8 +99,47 @@ export default async function LessonPage({ params }: LessonPageProps) {
             <p className="mt-3 text-lg font-bold">{lesson.activity}</p>
             <p className="mt-5 text-sm text-white/80">Missao em casa</p>
             <p className="mt-2 text-sm text-white">{lesson.homeMission}</p>
+            {lesson.vocab?.length ? (
+              <div className="mt-5">
+                <p className="text-sm text-white/80">Palavras-chave</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {lesson.vocab.map((word) => (
+                    <span key={word} className="rounded-full bg-white/10 px-3 py-1 text-xs font-bold">
+                      {word}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </aside>
         </section>
+
+        {lesson.material?.length ? (
+          <section className="rounded-3xl bg-white p-6 shadow-sm">
+            <p className="text-sm font-black uppercase tracking-wide text-[var(--color-brand)]">
+              Materiais da aula
+            </p>
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
+              {lesson.material.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-2xl border border-[var(--color-border)] p-4 transition hover:bg-[var(--color-surface)]"
+                >
+                  <p className="text-xs font-black uppercase tracking-wide text-[var(--color-muted)]">
+                    {item.type === "video" ? "Video" : "PDF"}
+                  </p>
+                  <p className="mt-2 font-bold text-[var(--color-ink)]">{item.label}</p>
+                  <p className="mt-2 text-sm text-[var(--color-muted)]">
+                    Abrir material em uma nova aba.
+                  </p>
+                </a>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         <section className="rounded-3xl bg-white p-6 shadow-sm">
           <p className="text-sm font-black uppercase tracking-wide text-[var(--color-brand)]">

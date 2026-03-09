@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { modules } from "@/lib/course-data";
 import { SetupNotice } from "@/components/setup-notice";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -71,7 +72,11 @@ export default async function DashboardPage() {
               <p className="mt-1 text-sm text-[var(--color-muted)]">{module.summary}</p>
               <div className="mt-4 grid gap-3 md:grid-cols-2">
                 {module.lessons.map((lesson) => (
-                  <div key={lesson.id} className="rounded-xl bg-[var(--color-surface)] p-4">
+                  <Link
+                    key={lesson.id}
+                    href={`/dashboard/aulas/${lesson.id}`}
+                    className="rounded-xl bg-[var(--color-surface)] p-4 transition hover:-translate-y-0.5 hover:shadow-sm"
+                  >
                     <p className="font-bold">{lesson.title}</p>
                     <p className="mt-1 text-sm text-[var(--color-muted)]">
                       <strong>Objetivo:</strong> {lesson.objective}
@@ -79,7 +84,8 @@ export default async function DashboardPage() {
                     <p className="mt-1 text-sm text-[var(--color-muted)]">
                       <strong>Atividade:</strong> {lesson.activity}
                     </p>
-                  </div>
+                    <p className="mt-3 text-sm font-bold text-[var(--color-brand)]">Abrir aula</p>
+                  </Link>
                 ))}
               </div>
             </article>

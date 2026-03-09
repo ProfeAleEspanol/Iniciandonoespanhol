@@ -5,13 +5,12 @@ const navItems = [
   { href: "/", label: "Inicio" },
   { href: "/metodologia", label: "Metodologia" },
   { href: "/planos", label: "Planos" },
-  { href: "/dashboard", label: "Plataforma" },
 ];
 
 export function SiteShell({
   children,
-  ctaLabel = "Entrar",
-  ctaHref = "/login",
+  ctaLabel = "Ver atividades",
+  ctaHref = "/metodologia",
 }: {
   children: ReactNode;
   ctaLabel?: string;

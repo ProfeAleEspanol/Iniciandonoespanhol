@@ -1,4 +1,6 @@
 import { modules } from "@/lib/course-data";
+import { SetupNotice } from "@/components/setup-notice";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -7,6 +9,17 @@ function completionPercent(total: number, done: number) {
 }
 
 export default async function DashboardPage() {
+  if (!isSupabaseConfigured()) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[var(--color-surface)] px-4 py-10">
+        <SetupNotice
+          title="Painel indisponivel no momento"
+          description="Conclua a configuracao do Supabase para liberar autenticacao, sessoes e acesso ao dashboard."
+        />
+      </div>
+    );
+  }
+
   const supabase = await createClient();
   const {
     data: { user },

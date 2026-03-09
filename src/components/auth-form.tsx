@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 type Mode = "signin" | "signup";
 
@@ -16,10 +17,17 @@ export function AuthForm() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const supabase = createClient();
+  const isConfigured = isSupabaseConfigured();
+  const supabase = isConfigured ? createClient() : null;
 
   async function handleAuth(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!supabase) {
+      setMessage("Configure o Supabase para habilitar o acesso da familia.");
+      return;
+    }
+
     setIsLoading(true);
     setMessage("");
 
@@ -98,13 +106,18 @@ export function AuthForm() {
 
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || !isConfigured}
           className="mt-2 w-full rounded-full bg-[var(--color-brand)] px-4 py-2 text-sm font-bold text-white disabled:opacity-60"
         >
           {isLoading ? "Processando..." : mode === "signin" ? "Entrar" : "Criar conta"}
         </button>
       </form>
 
+      {!isConfigured ? (
+        <p className="mt-4 text-sm text-[var(--color-muted)]">
+          Login temporariamente indisponivel enquanto o Supabase nao estiver configurado.
+        </p>
+      ) : null}
       {message ? <p className="mt-4 text-sm text-[var(--color-muted)]">{message}</p> : null}
     </div>
   );

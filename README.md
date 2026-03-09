@@ -24,7 +24,8 @@ Plataforma inicial de ensino online infantil para a marca Profe Ale.
 - `src/components/auth-form.tsx` formulario de login/cadastro
 - `src/lib/course-data.ts` dados iniciais de modulos e aulas
 - `src/lib/supabase/*` cliente Supabase (browser/server/middleware)
-- `src/middleware.ts` protecao de rotas
+- `src/proxy.ts` protecao de rotas
+- `src/app/api/health/route.ts` endpoint simples de health check
 - `supabase/sql/001_initial_schema.sql` schema inicial do banco + RLS
 
 ## Configurar .env.local
@@ -56,6 +57,12 @@ Para validar:
 ```bash
 npm.cmd run lint
 npm.cmd run build
+```
+
+Health check local:
+
+```bash
+http://localhost:3000/api/health
 ```
 
 ## GitHub + Vercel

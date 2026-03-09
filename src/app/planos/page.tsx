@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { SiteShell } from "@/components/site-shell";
 
 const plans = [
@@ -36,12 +37,12 @@ export default function PlansPage() {
                   <li key={feature}>- {feature}</li>
                 ))}
               </ul>
-              <button
-                type="button"
+              <Link
+                href="/login"
                 className="mt-6 w-full rounded-full bg-[var(--color-brand)] px-4 py-2 text-sm font-bold text-white"
               >
                 Assinar
-              </button>
+              </Link>
             </article>
           ))}
         </div>

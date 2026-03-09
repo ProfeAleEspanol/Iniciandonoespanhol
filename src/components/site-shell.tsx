@@ -1,47 +1,23 @@
-import Link from "next/link";
 import { ReactNode } from "react";
-
-const navItems = [
-  { href: "/", label: "Inicio" },
-  { href: "/metodologia", label: "Metodologia" },
-  { href: "/planos", label: "Planos" },
-];
+import { SiteHeader } from "@/components/site-header";
 
 export function SiteShell({
   children,
-  ctaLabel = "Ver atividades",
-  ctaHref = "/metodologia",
+  ctaLabel = "Comecar",
+  ctaHref = "/login",
 }: {
   children: ReactNode;
   ctaLabel?: string;
   ctaHref?: string;
 }) {
   return (
-    <div className="min-h-screen bg-[var(--color-surface)] text-[var(--color-ink)]">
-      <header className="sticky top-0 z-20 border-b border-[var(--color-border)] bg-white/90 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3">
-          <Link href="/" className="text-lg font-black tracking-tight">
-            Profe Ale
-          </Link>
-          <nav className="hidden items-center gap-6 text-sm font-semibold md:flex">
-            {navItems.map((item) => (
-              <Link key={item.href} href={item.href} className="hover:text-[var(--color-brand)]">
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-          <Link
-            href={ctaHref}
-            className="rounded-full bg-[var(--color-brand)] px-4 py-2 text-sm font-bold text-white transition hover:brightness-110"
-          >
-            {ctaLabel}
-          </Link>
-        </div>
-      </header>
-      <main>{children}</main>
-      <footer className="border-t border-[var(--color-border)] bg-white">
-        <div className="mx-auto w-full max-w-6xl px-4 py-6 text-sm text-[var(--color-muted)]">
-          Plataforma infantil de espanhol. Marca Profe Ale.
+    <div className="min-h-screen text-[var(--color-ink)]">
+      <SiteHeader ctaLabel={ctaLabel} ctaHref={ctaHref} />
+      <main className="pb-16">{children}</main>
+      <footer className="px-4 pb-8">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 rounded-[2rem] border border-white/70 bg-white/80 px-6 py-6 text-sm text-[var(--color-muted)] shadow-[0_16px_40px_rgba(87,111,164,0.08)] md:flex-row md:items-center md:justify-between">
+          <p>Plataforma alegre para aprender espanhol com autonomia, leveza e curiosidade.</p>
+          <p className="font-bold text-[var(--color-ink)]">Profe Ale</p>
         </div>
       </footer>
     </div>

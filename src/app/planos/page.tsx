@@ -3,49 +3,65 @@ import { SiteShell } from "@/components/site-shell";
 
 const plans = [
   {
-    name: "Kids Essencial",
+    name: "Trilha Essencial",
     price: "R$ 49/mes",
-    features: ["Trilha gravada", "Atividades PDF", "Painel de progresso"],
+    accent: "bg-white",
+    features: ["Aulas gravadas", "PDFs ludicos", "Mapa de progresso colorido"],
   },
   {
-    name: "Kids Plus",
+    name: "Trilha Plus",
     price: "R$ 99/mes",
-    features: ["Tudo do Essencial", "Aulas ao vivo em grupo", "Desafios mensais"],
+    accent: "bg-[var(--color-sky-soft)]",
+    features: ["Tudo do Essencial", "Encontros em grupo", "Desafios mensais divertidos"],
   },
   {
-    name: "Familia",
+    name: "Familia em Aventura",
     price: "R$ 139/mes",
-    features: ["Ate 3 criancas", "Relatorio por perfil", "Prioridade no suporte"],
+    accent: "bg-[var(--color-mint)]/80",
+    features: ["Ate 3 perfis", "Relatorios simples", "Prioridade para duvidas"],
   },
 ];
 
 export default function PlansPage() {
   return (
-    <SiteShell ctaLabel="Comecar agora" ctaHref="/dashboard">
-      <section className="mx-auto w-full max-w-6xl px-4 py-14">
-        <h1 className="text-4xl font-black md:text-5xl">Planos da plataforma</h1>
-        <p className="mt-3 max-w-2xl text-[var(--color-muted)]">
-          Modelo de assinatura para familias e crescimento por recorrencia.
-        </p>
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          {plans.map((plan) => (
-            <article key={plan.name} className="rounded-2xl border border-[var(--color-border)] bg-white p-6">
-              <h2 className="text-2xl font-black">{plan.name}</h2>
-              <p className="mt-2 text-lg font-bold text-[var(--color-brand)]">{plan.price}</p>
-              <ul className="mt-4 space-y-2 text-sm text-[var(--color-muted)]">
-                {plan.features.map((feature) => (
-                  <li key={feature}>- {feature}</li>
-                ))}
-              </ul>
-              <Link
-                href="/login"
-                className="mt-6 w-full rounded-full bg-[var(--color-brand)] px-4 py-2 text-sm font-bold text-white"
-              >
-                Assinar
-              </Link>
-            </article>
-          ))}
+    <SiteShell ctaLabel="Entrar com nome" ctaHref="/login">
+      <section className="mx-auto w-full max-w-6xl px-4 py-10">
+        <div className="rounded-[2.5rem] bg-white/90 p-8 shadow-[0_24px_60px_rgba(87,111,164,0.14)]">
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-[var(--color-brand)]">
+            Planos pensados para familias
+          </p>
+          <h1 className="mt-3 font-display text-5xl leading-none text-[var(--color-ink)]">
+            Escolha o ritmo ideal para continuar a jornada.
+          </h1>
+          <p className="mt-4 max-w-3xl text-lg text-[var(--color-muted)]">
+            A plataforma foi desenhada para crescer com a rotina da casa, sem perder o clima leve
+            e divertido do aprendizado.
+          </p>
         </div>
+      </section>
+      <section className="mx-auto grid w-full max-w-6xl gap-4 px-4 pb-12 md:grid-cols-3">
+        {plans.map((plan) => (
+          <article
+            key={plan.name}
+            className={`${plan.accent} rounded-[2rem] p-6 shadow-[0_20px_50px_rgba(87,111,164,0.12)]`}
+          >
+            <h2 className="font-display text-3xl text-[var(--color-ink)]">{plan.name}</h2>
+            <p className="mt-3 text-2xl font-black text-[var(--color-brand)]">{plan.price}</p>
+            <ul className="mt-5 space-y-3 text-sm text-[var(--color-muted)]">
+              {plan.features.map((feature) => (
+                <li key={feature} className="rounded-[1.2rem] bg-white/80 px-4 py-3 font-semibold">
+                  {feature}
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/login"
+              className="mt-6 inline-flex rounded-full bg-[var(--color-ink)] px-5 py-3 text-sm font-black text-white"
+            >
+              Quero comecar
+            </Link>
+          </article>
+        ))}
       </section>
     </SiteShell>
   );

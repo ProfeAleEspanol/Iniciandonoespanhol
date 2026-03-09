@@ -1,25 +1,54 @@
 @import "tailwindcss";
 
 :root {
-  --color-surface: #fff8ef;
-  --color-ink: #14232f;
-  --color-brand: #ff6b35;
-  --color-border: #ffd6bf;
-  --color-muted: #4a5d6b;
+  --color-surface: #fffdf7;
+  --color-surface-highlight: #fff6de;
+  --color-ink: #26415f;
+  --color-brand: #ff7e67;
+  --color-border: #ffe5ba;
+  --color-border-strong: #ffd48e;
+  --color-muted: #5d7391;
+  --color-sun: #ffe58f;
+  --color-sky-soft: #dff4ff;
+  --color-mint: #caf5df;
+  --color-lilac: #e8dbff;
 }
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
-  background: var(--color-surface);
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(255, 229, 143, 0.5), transparent 28%),
+    radial-gradient(circle at top right, rgba(223, 244, 255, 0.9), transparent 24%),
+    linear-gradient(180deg, #fffdf7 0%, #fffaf0 100%);
   color: var(--color-ink);
-  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  font-family: var(--font-body), "Trebuchet MS", "Segoe UI", sans-serif;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.font-display {
+  font-family: var(--font-display), "Trebuchet MS", sans-serif;
+}
+
+::selection {
+  background: rgba(255, 126, 103, 0.25);
 }

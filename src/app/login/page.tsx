@@ -1,33 +1,11 @@
-import { redirect } from "next/navigation";
-import { AuthForm } from "@/components/auth-form";
-import { SetupNotice } from "@/components/setup-notice";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { createClient } from "@/lib/supabase/server";
+import { WelcomeCard } from "@/components/welcome-card";
 
-export default async function LoginPage() {
-  if (!isSupabaseConfigured()) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-[var(--color-surface)] px-4 py-10">
-        <SetupNotice
-          title="Login ainda nao esta habilitado"
-          description="A area interna depende da conexao com o Supabase. A parte publica do site continua funcionando normalmente."
-        />
-      </div>
-    );
-  }
-
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (user) {
-    redirect("/dashboard");
-  }
-
+export default function LoginPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[var(--color-surface)] px-4 py-10">
-      <AuthForm />
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-10">
+      <div className="absolute left-8 top-8 h-28 w-28 rounded-full bg-[var(--color-sun)]/80 blur-3xl" />
+      <div className="absolute bottom-10 right-10 h-36 w-36 rounded-full bg-[var(--color-sky-soft)] blur-3xl" />
+      <WelcomeCard />
     </div>
   );
 }

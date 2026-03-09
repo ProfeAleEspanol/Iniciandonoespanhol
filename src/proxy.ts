@@ -1,10 +1,9 @@
-import type { NextRequest } from "next/server";
-import { updateSession } from "@/lib/supabase/middleware";
+import { NextResponse } from "next/server";
 
-export async function proxy(request: NextRequest) {
-  return updateSession(request);
+export async function proxy() {
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/login"],
+  matcher: ["/dashboard/:path*", "/login", "/metodologia", "/planos"],
 };

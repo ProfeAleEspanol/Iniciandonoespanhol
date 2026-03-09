@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { allLessons, modules } from "@/lib/course-data";
+import { getCompletedLessonIds } from "@/lib/progress";
 import { SetupNotice } from "@/components/setup-notice";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
@@ -8,8 +9,6 @@ import { redirect } from "next/navigation";
 function completionPercent(total: number, done: number) {
   return Math.round((done / total) * 100);
 }
-
-const completedLessonIds = new Set(["m1-a1", "m1-a2"]);
 
 export default async function DashboardPage() {
   if (!isSupabaseConfigured()) {
@@ -40,6 +39,7 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
+  const completedLessonIds = await getCompletedLessonIds();
   const completedLessons = completedLessonIds.size;
   const totalLessons = modules.reduce((acc, item) => acc + item.lessons.length, 0);
   const progress = completionPercent(totalLessons, completedLessons);

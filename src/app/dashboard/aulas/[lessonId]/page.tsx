@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { SetupNotice } from "@/components/setup-notice";
 import { allLessons, getLessonById } from "@/lib/course-data";
+import { getCompletedLessonIds, saveCompletedLessonIds } from "@/lib/progress";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
 
@@ -39,9 +40,31 @@ export default async function LessonPage({ params }: LessonPageProps) {
     notFound();
   }
 
-  const lessonIndex = allLessons.findIndex((item) => item.id === lesson.id);
+  const currentLesson = lesson;
+
+  const lessonIndex = allLessons.findIndex((item) => item.id === currentLesson.id);
   const previousLesson = lessonIndex > 0 ? allLessons[lessonIndex - 1] : null;
   const nextLesson = lessonIndex < allLessons.length - 1 ? allLessons[lessonIndex + 1] : null;
+  const completedLessonIds = await getCompletedLessonIds();
+  const isCompleted = completedLessonIds.has(currentLesson.id);
+
+  async function markLessonAsCompleted() {
+    "use server";
+
+    const nextCompletedLessonIds = await getCompletedLessonIds();
+    nextCompletedLessonIds.add(currentLesson.id);
+    await saveCompletedLessonIds(nextCompletedLessonIds);
+    redirect(`/dashboard/aulas/${currentLesson.id}`);
+  }
+
+  async function markLessonAsPending() {
+    "use server";
+
+    const nextCompletedLessonIds = await getCompletedLessonIds();
+    nextCompletedLessonIds.delete(currentLesson.id);
+    await saveCompletedLessonIds(nextCompletedLessonIds);
+    redirect(`/dashboard/aulas/${currentLesson.id}`);
+  }
 
   return (
     <div className="min-h-screen bg-[var(--color-surface)] px-4 py-8">
@@ -51,8 +74,8 @@ export default async function LessonPage({ params }: LessonPageProps) {
             <p className="text-sm font-bold uppercase tracking-wide text-[var(--color-brand)]">
               {lesson.moduleTitle}
             </p>
-            <h1 className="mt-2 text-4xl font-black text-[var(--color-ink)]">{lesson.title}</h1>
-            <p className="mt-2 max-w-3xl text-sm text-[var(--color-muted)]">{lesson.moduleSummary}</p>
+            <h1 className="mt-2 text-4xl font-black text-[var(--color-ink)]">{currentLesson.title}</h1>
+            <p className="mt-2 max-w-3xl text-sm text-[var(--color-muted)]">{currentLesson.moduleSummary}</p>
           </div>
           <Link
             href="/dashboard"
@@ -62,29 +85,50 @@ export default async function LessonPage({ params }: LessonPageProps) {
           </Link>
         </div>
 
+        <section className="rounded-3xl bg-white p-5 shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-black uppercase tracking-wide text-[var(--color-brand)]">
+                Status da aula
+              </p>
+              <p className="mt-2 text-lg font-bold text-[var(--color-ink)]">
+                {isCompleted ? "Aula concluida" : "Aula ainda em andamento"}
+              </p>
+            </div>
+            <form action={isCompleted ? markLessonAsPending : markLessonAsCompleted}>
+              <button
+                type="submit"
+                className="rounded-full bg-[var(--color-brand)] px-5 py-2 text-sm font-bold text-white"
+              >
+                {isCompleted ? "Marcar como pendente" : "Marcar como concluida"}
+              </button>
+            </form>
+          </div>
+        </section>
+
         <section className="grid gap-4 md:grid-cols-3">
           <article className="rounded-3xl bg-white p-5 shadow-sm md:col-span-2">
             <p className="text-sm font-black uppercase tracking-wide text-[var(--color-brand)]">
               Objetivo da aula
             </p>
-            <p className="mt-3 text-lg text-[var(--color-ink)]">{lesson.objective}</p>
+            <p className="mt-3 text-lg text-[var(--color-ink)]">{currentLesson.objective}</p>
 
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               <div className="rounded-2xl bg-[var(--color-surface)] p-4">
                 <h2 className="text-lg font-black">Aquecimento</h2>
-                <p className="mt-2 text-sm text-[var(--color-muted)]">{lesson.hook}</p>
+                <p className="mt-2 text-sm text-[var(--color-muted)]">{currentLesson.hook}</p>
               </div>
               <div className="rounded-2xl bg-[var(--color-surface)] p-4">
                 <h2 className="text-lg font-black">Pratica guiada</h2>
-                <p className="mt-2 text-sm text-[var(--color-muted)]">{lesson.practice}</p>
+                <p className="mt-2 text-sm text-[var(--color-muted)]">{currentLesson.practice}</p>
               </div>
             </div>
 
-            {lesson.steps?.length ? (
+            {currentLesson.steps?.length ? (
               <div className="mt-6 rounded-2xl border border-[var(--color-border)] p-4">
                 <h2 className="text-lg font-black">Como fazer esta aula</h2>
                 <ol className="mt-3 space-y-2 text-sm text-[var(--color-muted)]">
-                  {lesson.steps.map((step, index) => (
+                  {currentLesson.steps.map((step, index) => (
                     <li key={step}>
                       <strong className="text-[var(--color-ink)]">{index + 1}.</strong> {step}
                     </li>
@@ -96,14 +140,14 @@ export default async function LessonPage({ params }: LessonPageProps) {
 
           <aside className="rounded-3xl bg-[var(--color-ink)] p-5 text-white shadow-sm">
             <p className="text-sm font-black uppercase tracking-wide text-white/70">Atividade principal</p>
-            <p className="mt-3 text-lg font-bold">{lesson.activity}</p>
+            <p className="mt-3 text-lg font-bold">{currentLesson.activity}</p>
             <p className="mt-5 text-sm text-white/80">Missao em casa</p>
-            <p className="mt-2 text-sm text-white">{lesson.homeMission}</p>
-            {lesson.vocab?.length ? (
+            <p className="mt-2 text-sm text-white">{currentLesson.homeMission}</p>
+            {currentLesson.vocab?.length ? (
               <div className="mt-5">
                 <p className="text-sm text-white/80">Palavras-chave</p>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  {lesson.vocab.map((word) => (
+                  {currentLesson.vocab.map((word) => (
                     <span key={word} className="rounded-full bg-white/10 px-3 py-1 text-xs font-bold">
                       {word}
                     </span>
@@ -114,13 +158,13 @@ export default async function LessonPage({ params }: LessonPageProps) {
           </aside>
         </section>
 
-        {lesson.material?.length ? (
+        {currentLesson.material?.length ? (
           <section className="rounded-3xl bg-white p-6 shadow-sm">
             <p className="text-sm font-black uppercase tracking-wide text-[var(--color-brand)]">
               Materiais da aula
             </p>
             <div className="mt-4 grid gap-3 md:grid-cols-2">
-              {lesson.material.map((item) => (
+              {currentLesson.material.map((item) => (
                 <a
                   key={item.href}
                   href={item.href}

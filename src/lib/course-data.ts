@@ -65,6 +65,24 @@ export const modules: Module[] = [
         practice: "Escolher um motivo para aprender espanhol e desenhar essa meta.",
         homeMission: "Guardar o cartao da meta em um lugar visivel da casa.",
         vocab: ["viaje", "musica", "amigo", "meta"],
+        steps: [
+          "Abrir o video curto e perguntar o que a crianca imagina sobre aprender espanhol.",
+          "Conversar sobre onde o espanhol aparece no dia a dia: musica, desenhos e viagens.",
+          "Ler o PDF junto e escolher uma meta simples para este mes.",
+          "Desenhar ou escrever essa meta e deixar o cartao visivel em casa.",
+        ],
+        material: [
+          {
+            label: "Abrir video da aula 2",
+            href: "/materiais/aula2-video.mp4",
+            type: "video",
+          },
+          {
+            label: "Abrir PDF da aula 2",
+            href: "/materiais/aula2.pdf",
+            type: "pdf",
+          },
+        ],
       },
     ],
   },

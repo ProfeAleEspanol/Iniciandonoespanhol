@@ -10,7 +10,7 @@ type LessonPageProps = {
 export default async function LessonPage({ params }: LessonPageProps) {
   const { lessonId } = await params;
   return (
-    <SiteShell ctaLabel="Voltar ao mapa" ctaHref="/dashboard">
+    <SiteShell ctaLabel="Acesso da familia" ctaHref="/login">
       <LessonPageClient lessonId={lessonId} />
     </SiteShell>
   );

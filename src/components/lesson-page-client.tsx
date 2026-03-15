@@ -7,19 +7,21 @@ import { EmptyState } from "@/components/empty-state";
 import { FunButton } from "@/components/fun-button";
 import { allLessons, getLessonById } from "@/lib/course-data";
 import { readCompletedLessonIds, saveCompletedLessonIds } from "@/lib/student-store";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { useStudentSession } from "@/components/student-session";
 
 export function LessonPageClient({ lessonId }: { lessonId: string }) {
   const router = useRouter();
   const { isReady, studentName } = useStudentSession();
   const [completedLessonIds, setCompletedLessonIds] = useState<Set<string>>(new Set());
+  const needsStudentName = !isSupabaseConfigured();
 
   useEffect(() => {
     if (!isReady) {
       return;
     }
 
-    if (!studentName) {
+    if (needsStudentName && !studentName) {
       router.replace("/login");
       return;
     }
@@ -27,7 +29,7 @@ export function LessonPageClient({ lessonId }: { lessonId: string }) {
     startTransition(() => {
       setCompletedLessonIds(readCompletedLessonIds());
     });
-  }, [isReady, router, studentName]);
+  }, [isReady, needsStudentName, router, studentName]);
 
   const lesson = getLessonById(lessonId);
 
@@ -42,7 +44,7 @@ export function LessonPageClient({ lessonId }: { lessonId: string }) {
     );
   }
 
-  if (!isReady || !studentName) {
+  if (!isReady || (needsStudentName && !studentName)) {
     return (
       <div className="mx-auto flex min-h-[60vh] w-full max-w-5xl items-center justify-center px-4 py-10">
         <EmptyState

@@ -8,6 +8,7 @@ import { ModuleCard } from "@/components/module-card";
 import { ProgressCard } from "@/components/progress-card";
 import { allLessons, modules } from "@/lib/course-data";
 import { readCompletedLessonIds } from "@/lib/student-store";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { useStudentSession } from "@/components/student-session";
 
 function completionPercent(total: number, done: number) {
@@ -18,13 +19,14 @@ export function DashboardClient() {
   const router = useRouter();
   const { isReady, studentName } = useStudentSession();
   const [completedLessonIds, setCompletedLessonIds] = useState<Set<string>>(new Set());
+  const needsStudentName = !isSupabaseConfigured();
 
   useEffect(() => {
     if (!isReady) {
       return;
     }
 
-    if (!studentName) {
+    if (needsStudentName && !studentName) {
       router.replace("/login");
       return;
     }
@@ -32,9 +34,9 @@ export function DashboardClient() {
     startTransition(() => {
       setCompletedLessonIds(readCompletedLessonIds());
     });
-  }, [isReady, router, studentName]);
+  }, [isReady, needsStudentName, router, studentName]);
 
-  if (!isReady || !studentName) {
+  if (!isReady || (needsStudentName && !studentName)) {
     return (
       <div className="mx-auto flex min-h-[60vh] w-full max-w-6xl items-center justify-center px-4 py-10">
         <EmptyState
@@ -49,11 +51,12 @@ export function DashboardClient() {
   const totalLessons = allLessons.length;
   const progress = completionPercent(totalLessons, completedLessons);
   const nextLesson = allLessons.find((lesson) => !completedLessonIds.has(lesson.id)) ?? allLessons[0];
+  const displayName = studentName || "explorador";
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8">
       <ContinueLearningBanner
-        studentName={studentName}
+        studentName={displayName}
         lessonTitle={nextLesson.title}
         lessonObjective={nextLesson.objective}
         href={`/dashboard/aulas/${nextLesson.id}`}

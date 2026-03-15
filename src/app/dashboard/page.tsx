@@ -3,7 +3,7 @@ import { SiteShell } from "@/components/site-shell";
 
 export default function DashboardPage() {
   return (
-    <SiteShell ctaLabel="Trocar nome" ctaHref="/login">
+    <SiteShell ctaLabel="Acesso da familia" ctaHref="/login">
       <DashboardClient />
     </SiteShell>
   );
